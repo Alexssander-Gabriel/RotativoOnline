@@ -1,0 +1,21 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { ReservarPage } from './reservar.page';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ReservarPage
+  },
+  {
+    path: ':id',
+    component: ReservarPage,
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class ReservarPageRoutingModule {}

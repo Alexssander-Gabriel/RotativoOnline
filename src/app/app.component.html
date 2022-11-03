@@ -1,0 +1,48 @@
+<ion-app>
+  <ion-menu s ide="start" menuId="main-menu" contentId="main">
+    <ion-header class="ion-text-center">
+      <ion-toolbar color="primary">
+        <ion-title color="white">Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+       <ion-list>
+        <!-- <ion-list-header *ngIf="nomeUsuario">
+          <ion-label>Usuário: {{ nomeUsuario }}</ion-label>
+        </ion-list-header> -->
+
+        <!-- <ion-item >
+          <ion-label>
+            <h2>Usuário</h2>
+            <span>}</span>
+          </ion-label>
+        </ion-item> -->
+
+        <ion-menu-toggle>
+          <ion-item routerLink="/home">
+            <ion-icon name="search" ></ion-icon>
+            <ion-text>Explorar</ion-text>
+          </ion-item>
+         </ion-menu-toggle>
+
+         <ion-menu-toggle>
+          <ion-item routerLink="/welcome/sign-in">
+           <ion-icon name="person"></ion-icon>
+            <ion-text>Logar</ion-text>
+          </ion-item>
+         </ion-menu-toggle>
+
+        <ion-menu-toggle>
+         <ion-item routerLink="/welcome">
+          <ion-icon name="close"></ion-icon>
+           <ion-text>Sair</ion-text>
+         </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+
+  </ion-menu>
+
+  <ion-router-outlet id="main"></ion-router-outlet>
+</ion-app>

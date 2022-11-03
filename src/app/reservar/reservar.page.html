@@ -1,0 +1,116 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/home" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Reservar</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <!-- <ion-item>
+      <ion-label position="stacked">Estacionamento:</ion-label>
+      <ion-select formControlName="Estacionamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithEstacionamento">
+        <ion-select-option *ngFor="let estacionamento of estacionamentos" [value]="estacionamento.EstacionamentoId">
+          {{ estacionamento.NomeEstacionamento }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item> -->
+
+    <ion-item>
+      <ion-label position="stacked">Estacionamento:</ion-label>
+      <ion-select formControlName="Estacionamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithEstacionamento">
+        <ion-select-option *ngFor="let estacionamento of estacionamentos" [value]="estacionamento">
+          {{ estacionamento.NomeEstacionamento }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Entrada:</ion-label>
+      <ion-datetime formControlName="DataEntrada" displayFormat="DD/MMM/YYYY HH:mm" pickerFormat="DD MMM YYYY HH mm" monthShortNames='jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez' doneText="Ok" cancelText="Cancelar"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Saida:</ion-label>
+      <ion-datetime (ionBlur)="calculaValores()" formControlName="DataSaida" displayFormat="DD/MMM/YYYY HH:mm" pickerFormat="DD MMM YYYY HH mm" monthShortNames='jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez' doneText="Ok" cancelText="Cancelar"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Observação:</ion-label>
+      <ion-textarea formControlName="Observacao" placeholder="Observação"></ion-textarea>
+    </ion-item>
+
+    <!-- <ion-item *ngIf="mostraMetodosPagamento"> -->
+      <ion-item>
+      <ion-label position="stacked">Forma de Pagamento:</ion-label>
+      <ion-select formControlName="FormaPagamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithFormaPagamento">
+        <ion-select-option *ngFor="let formapagamento of formaPagamentos" [value]="formapagamento">
+          {{ formapagamento.Descricao }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- <ion-item *ngIf="mostraMetodosPagamento"> -->
+     <!-- <ion-item>
+
+      <ion-label position="stacked">Método de Pagamento:</ion-label>
+      <ion-select formControlName="MetodosPagamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithMetodosPagamento">
+        <ion-select-option *ngFor="let metodo of metodosPagamento" [value]="metodo">
+          {{ metodo.Descricao }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item> -->
+
+    <!-- <ion-card *ngIf="liberaPagamento === 'S'">
+      <ion-card-header>
+        <ion-card-title>Informações</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label position="stacked">Método de Pagamento:</ion-label>
+          <ion-select formControlName="MetodosPagamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithMetodosPagamento">
+            <ion-select-option *ngFor="let metodo of metodosPagamento" [value]="metodo">
+              {{ metodo.Descricao }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-label>
+          <h3>Preço R$ {{ precoReserva }}</h3>
+          <h3>Valor inicial: R$ {{ valorPagamento }}</h3>
+          <h3>Tempo: {{ tempoDescricao }}</h3>
+        </ion-label>
+      </ion-card-content>
+    </ion-card> -->
+
+  </form>
+<ion-item>
+  <ion-label>Pagar Antecipado</ion-label>
+  <ion-toggle
+  color="primary"
+  [(ngModel)]="isToggleBtnChecked"
+  [checked]="isToggleBtnChecked"
+  (ionChange)="onToggleBtnChange($event)"
+  >
+  </ion-toggle>
+</ion-item>
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-button
+    size="large"
+    expand="block"
+    shape="round"
+    color="primary"
+    (click)="onSubmit()">
+    <ion-text color="white">Reservar</ion-text>
+  </ion-button>
+</ion-footer>

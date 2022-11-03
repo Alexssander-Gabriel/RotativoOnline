@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Google Mapas - 4S Sistemas</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyCNS8m0KGa1G5pf_mEZ8169H5q0-uwGj9c"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+            h1 { text-align: center; font-size: 18px; }
+            #menu-toggle {margin-top:7px;float:left;}
+            #trajeto-texto { width: 100%;}
+            body {overflow-x: hidden;}
+            #wrapper {padding-left: 0;-webkit-transition: all 0.5s ease;-moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}
+            #wrapper.toggled {padding-left: 250px;}
+            #sidebar-wrapper {z-index: 1000;position: fixed;left: 250px;width: 0;height: 100%;margin-left: -250px;overflow-y: auto;-webkit-transition: all 0.5s ease;-moz-transition: all 0.5s ease;-o-transition: all 0.5s ease;transition: all 0.5s ease;}
+            #wrapper.toggled #sidebar-wrapper {width: 250px;}
+            #page-content-wrapper {width: 100%;position: absolute;}
+            #wrapper.toggled #page-content-wrapper {position: absolute;margin-right: -250px;}
+        </style>
+    </head>
+    <body>
+         <div id="wrapper">
+            <div id="sidebar-wrapper">
+                    <div id="trajeto-texto"></div>
+                    <!--<div id="stretwiew"></div>
+                    <button onclick="desenharota(true)" type="button" class="btn btn-default">Melhor Rota</button>
+                    <button onclick="desenharota(false)" type="button" class="btn btn-default">Rota Personalizada</button>
+                    <button type="button" class="btn btn-default">Expotar Rota Pratic</button>-->
+            </div>
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Rotas</a>
+                    <h1>Google Mapas - 4S Sistemas</h1>
+                </div>
+                <div id="site">
+                    <span class="window-size"></span>
+                    <div id="rotas_val"></div>
+                    <div id="rotas_inv"></div>
+                    <div id="mapa"></div>
+
+                </div>
+            </div>
+        </div>
+        <script >
+            $.ajaxSetup({async: false});
+            var map;
+            var directionsDisplay;
+            var directionsService = new google.maps.DirectionsService();
+            var end_inicio = null;
+            var end_rotas = [];
+            var end_final = null;
+            var api   = 'https://maps.googleapis.com/maps/api/geocode/json?key=';
+            var key   = 'AIzaSyCNS8m0KGa1G5pf_mEZ8169H5q0-uwGj9c';
+            var url   = api+key+'&address=';
+            var cont  = 0;
+            var end_valido = new Array();
+            var dados = new Array();
+            dados[0] = ["SANDISK, GIRAU DO PONCIANO, AL"];
+        dados[1] = ["AQUELE, ICARA, SC"];
+        dados[2] = ["CRVG, RIO DE JANEIRO, RJ"];
+        dados[3] = ["ANDROID, NEW YORK, SC"];
+        dados[4] = ["RUA OSVALDO ROBERTO MAIER, CRICIUMA, SC"];
+        dados[5] = ["RUA DA CASA DELA, PERTO DA CASA DA MAE, SPRINGFIELD, SC"];
+        dados[6] = ["AV. ITAMARATI, FLORIANOPOLIS, SC"];
+        dados[7] = ["RUA AMARO JOSE PEREIRA, ARARANGUA, SC"];
+        dados[8] = ["RUA GABRIEL STRACHOSKI, CRICIUMA, SC"];
+        dados[9] = ["RUA DAS PALMEIRAS DO PANTANAL, BATIMA, SC"];
+        dados[10] = ["ESTRADA DA CASA GRANDE, MOGI DAS CRUZES, SP"];
+        dados[11] = ["IMIGRANTE PIERINI, CRICIUMA, SC"];
+        dados[12] = ["RUA DOS BOBOS, CRICIUMA, SC"];
+        
+            $(document).ready(function(event) {
+                validarota();
+                carregarotas();
+                $.ajaxSetup({async: true});
+                initialize();
+                desenharota(false);
+            });
+            function validarota(){
+                for(var i = 0; i < dados.length; i++){
+                    $.getJSON(url+dados[i][0], function(json) {
+                        dados[i][1]=json.status;
+                        var rotas_val = document.getElementById('rotas_val').innerHTML;
+                        var rotas_inv  = document.getElementById('rotas_inv').innerHTML;
+                        if (dados[i][1]=="OK"){
+                             //document.getElementById('rotas_val').innerHTML    = rotas_val+"<p style='color:green;'>Endere�o V�lido: "+dados[i][0]+"</p>";
+                             end_valido[cont]=dados[i][0];
+                             cont++;
+                        } else if (dados[i][1]=="ZERO_RESULTS") {
+                            //document.getElementById('rotas_inv').innerHTML    = rotas_inv+"<p style='color:red;'>Endere�o Inv�lido: "+dados[i][0]+"</p>";
+                        }
+                    });
+                }
+            }
+            function carregarotas(){
+                end_inicio = end_valido[0];
+                for(var i = 1; i < end_valido.length-1; i++){
+                     var endereco = {
+                        location: null
+                     }
+                     endereco.location=end_valido[i];
+                     end_rotas.push(endereco);
+                };
+                end_final = end_valido[cont-1];
+            }
+            function initialize() {
+                directionsDisplay = new google.maps.DirectionsRenderer();
+                var latlng = new google.maps.LatLng(-18.8800397, -47.05878999999999);
+                var options = {
+                    zoom: 0,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map(document.getElementById("mapa"), options);
+                directionsDisplay.setMap(map);
+                directionsDisplay.setPanel(document.getElementById("trajeto-texto"));
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        pontoPadrao = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        map.setCenter(pontoPadrao);
+                        var geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({
+                            "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                        },
+                        function(results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                $("#txtEnderecoPartida").val(results[0].formatted_address);
+                            }
+                        });
+                    });
+                }
+            }
+            function desenharota(optimize){
+                if (end_rotas!=null){
+                    request = {
+                        origin: end_inicio,
+                        destination: end_final,
+                        waypoints: end_rotas,
+                        travelMode: google.maps.TravelMode.DRIVING,
+                        optimizeWaypoints: optimize
+                    };
+                }else{
+                    request = {
+                        origin: end_inicio,
+                        destination: end_final,
+                        travelMode: google.maps.TravelMode.DRIVING
+                    };
+                };
+
+                directionsService.route(request, function(result, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setDirections(result);
+                    }
+                });
+            }
+            function sizeOfThings(){
+              var windowWidth = window.innerWidth;
+              var windowHeight = window.innerHeight;
+              $('#mapa').css('height',windowHeight-50);
+              $('#trajeto-texto').css('height',windowHeight);
+              if(($('#sidebar-wrapper').css('width'))=='0px'){
+                    $('#mapa').css('width',windowWidth);
+                }else{
+                    $('#mapa').css('width',windowWidth-250);
+
+                }
+            };
+            sizeOfThings();
+            window.addEventListener('resize', function(){
+                sizeOfThings();
+            });
+
+             $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+                var windowWidth = window.innerWidth;
+                if(($('#sidebar-wrapper').css('width'))=='0px'){
+                    $('#mapa').css('width',windowWidth-250);
+                }else{
+                    $('#mapa').css('width',windowWidth);
+                }
+            });
+        </script>
+    </body>
+</html>

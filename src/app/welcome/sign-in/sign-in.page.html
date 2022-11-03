@@ -1,0 +1,85 @@
+<ion-content [fullscreen]="true">
+
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button mode="md" defaultHref="/welcome" color="white"></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+</ion-content>
+
+<ion-footer>
+  <ion-list lines="full">
+    <ion-list-header class="ion-margin">
+      <ion-label>
+        Bem vindo novamente
+      </ion-label>
+    </ion-list-header>
+
+    <ion-item-group class="ion-margin-horizontal">
+      <form [formGroup]="form">
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Login</ion-label>
+            <ion-input formControlName="login" type="email" placeholder="Login">
+              <ion-icon name="person" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" 
+            *ngIf="!form.get('login').valid && form.get('login').touched">
+            <ion-text *ngIf="form.get('login').hasError('required')">
+              * Preencha seu nome de usuário
+            </ion-text>
+            <ion-text 
+              *ngIf="!form.get('login').hasError('required') && form.get('login').hasError('login')">
+              * Prencha seu endereço de email
+            </ion-text>
+          </ion-text>
+        </div>
+
+        
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Senha</ion-label>
+            <ion-input formControlName="senha" type="password" placeholder="Senha">
+              <ion-icon name="key" color="medium" slot="start"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('senha').valid && form.get('senha').touched">
+            <ion-text *ngIf="form.get('senha').hasError('required')">
+              * Digite sua senha
+            </ion-text>
+            <ion-text *ngIf="!form.get('senha').hasError('senha') && form.get('senha').hasError('minlength')">
+              * A Senha deve conter no mínimo 8 caracteres
+            </ion-text>
+          </ion-text>
+        </div>
+        
+
+        <p class="ion-text-right"><ion-text color="primary">Esqueceu sua senha?</ion-text></p>
+
+        <ion-button 
+          size="large" 
+          expand="block" 
+          shape="round" 
+          color="primary" 
+          (click)="onSubmit()">
+          <ion-text color="white">Entrar</ion-text>
+        </ion-button>
+      </form>
+    </ion-item-group>
+
+    <!-- <p class="ion-text-center">
+      <ion-text>ou entrar com</ion-text>
+    </p>
+
+    <p class="ion-text-center">
+      <ion-icon name="logo-facebook" color="tertiary"></ion-icon>
+      <ion-icon name="logo-google" color="danger"></ion-icon>
+      <ion-icon name="logo-twitter" color="secondary"></ion-icon>
+    </p> -->
+
+  </ion-list>
+</ion-footer>

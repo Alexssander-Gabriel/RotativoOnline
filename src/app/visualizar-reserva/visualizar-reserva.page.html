@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/home" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Resumo</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Informações</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-label>
+        <h3>Estacionamento:  Aguiar Estacionamentos </h3>
+        <h3>Forma de Pagamento:  PIX</h3>
+        <!-- <h3>Pagamento:  {{ descricaoMetodoPagamento }}</h3> -->
+        <h3>Valor: R$ 5.00</h3>
+        <h3>Data Entrada: 02/11/2022 - 21:14:47</h3>
+        <h3>Data Saida: 02/11/2022  - 21:14:47</h3>
+        <h3>Tempo: 3 Hrs e 51 Min</h3>
+        <h3>Situação: Finalizado</h3>
+      </ion-label>
+
+      <br>
+
+      <!-- <ion-label *ngIf="pagamentoPix">
+        <h1>PIX</h1>
+        <br>
+        <h3>Tipo Chave : CNPJ</h3>
+        <h3>Chave: 37.573.307/0001-91</h3>
+      </ion-label> -->
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+
+<ion-footer>
+  <ion-button
+    size="large"
+    expand="block"
+    shape="round"
+    color="primary"
+    (click)="CancelarReserva()">
+    <ion-text color="white">Cancelar</ion-text>
+  </ion-button>
+</ion-footer>

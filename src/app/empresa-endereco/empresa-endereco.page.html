@@ -1,0 +1,84 @@
+<ion-header color="primary">
+
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/home" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Endereço</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{NomeEstacionamento}}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-img [src]="UrlFoto"></ion-img>      
+    </ion-card-content>
+
+    <ion-item>
+      <ion-label>
+        <ion-icon name="map-outline" style="font-size: 25px"></ion-icon>
+        <a style="font-size: 25px" href="www.google.com.br"> localizar</a>
+      </ion-label>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>
+        <h1>Endereço</h1>
+        <span>{{ Endereco }}, {{ NumeroEndereco }}</span>
+      </ion-label>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>
+        <h1>Bairro</h1>
+        <span>{{ BairroEndereco }}</span>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <h1>Cep</h1>
+        <span>{{ NumeroCep }}</span>
+      </ion-label>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>
+        <h1>Cidade</h1>
+        <span>{{ NomeCidade }}</span>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <h1>Complemento</h1>
+        <span>{{ Complemento }}</span>
+      </ion-label>
+    </ion-item>
+
+  </ion-card> 
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-toolbar color="primary">
+    <ion-slides [options]="slideOptions">
+      <ion-slide *ngFor="let option of optionsEmpresa">
+        <div class="container ion-text-left"  style="padding-right: 2px;" (click)="abrirTela(option.rota)">
+          <ion-icon [name]="option.icon"></ion-icon>
+           <span>{{option.text}}</span> 
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </ion-toolbar>
+
+</ion-footer>
+
