@@ -96,7 +96,7 @@
         <div class="ion-margin-vertical">
           <ion-item>
             <ion-label position="stacked">Telefone</ion-label>
-            <ion-input formControlName="numeroTelefone" type="text" placeholder="Número Telefone">
+            <ion-input formControlName="numeroTelefone" type="text" placeholder="Número Telefone" mask="(00)00000-0000">
               <ion-icon name="phone-portrait" slot="start" color="medium"></ion-icon>
             </ion-input>
           </ion-item>
@@ -154,7 +154,7 @@
           </ion-item>
           <ion-text class="error" color="danger" *ngIf="!form.get('endereco').valid && form.get('endereco').touched">
             <ion-text *ngIf="form.get('endereco').hasError('required')">
-              * Preencha o endereco
+              * Preencha o endereço
             </ion-text>
           </ion-text>
         </div>

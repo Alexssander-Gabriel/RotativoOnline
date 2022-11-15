@@ -1,5 +1,5 @@
   export interface Estacionamento {
-      EstacionamentoId: Number;
+      EstacionamentoId: number;
       NomeEstacionamento: string;
       BairroEndereco: string;
       Email: string;
@@ -14,7 +14,10 @@
       Sobre: string;
       NomeCidade: string;
       Estado: string;
-      DescricaoDiasAtendimento: string;
       UrlFoto: string;
       Complemento: string;
+      LinkMaps : string;
+      ChavePix : string;
+      TipoChavePix : string;
+      VagasReserva : string;
   }

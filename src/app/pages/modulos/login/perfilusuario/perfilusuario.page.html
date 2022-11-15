@@ -1,0 +1,25 @@
+<ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button mode="md" defaultHref="/estacionamento-lista" color="white"></ion-back-button>
+      </ion-buttons>
+      <ion-title>
+        <p><ion-text color="white">Perfil de usuário</ion-text></p>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="background">
+    <ion-card>
+      <ion-list lines="full">
+        <ion-item (click)="abrirTela(item.rota)" *ngFor="let item of optionsPerfilUsuario" detail>
+
+          <ion-icon slot="start" [name]="item.icon" ></ion-icon>
+          <ion-label>{{item.text}}</ion-label>
+
+        </ion-item>
+      </ion-list>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,5 +1,5 @@
 export interface RetornoInsert{
-    Dados:{
+    Dados: {
         Retorno : string;
         Sucesso : string;
     }

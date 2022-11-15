@@ -1,0 +1,157 @@
+<ion-header color="primary">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/perfilusuario" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Cadastro</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-list lines="full">
+
+    <ion-item-group class="ion-margin-horizontal">
+      <form [formGroup]="form">
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Nome</ion-label>
+            <ion-input formControlName="Nome" type="text" placeholder="Nome">
+              <ion-icon name="person-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('Nome').valid && form.get('Nome').touched">
+            <ion-text *ngIf="form.get('Nome').hasError('required')">
+              * Preencha seu nome
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Cpf</ion-label>
+            <ion-input formControlName="Cpf" type="text" placeholder="CPF">
+              <ion-icon name="card" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('Cpf').valid && form.get('Cpf').touched">
+            <ion-text *ngIf="form.get('Cpf').hasError('required')">
+              * Preencha o Cpf
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Telefone</ion-label>
+            <ion-input formControlName="NumeroTelefone" type="text" placeholder="Número Telefone">
+              <ion-icon name="phone-portrait" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('NumeroTelefone').valid && form.get('NumeroTelefone').touched">
+            <ion-text *ngIf="form.get('NumeroTelefone').hasError('required')">
+              * Preencha o Número Telefone
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Numero Cep</ion-label>
+            <ion-input formControlName="NumeroCep" type="text" placeholder="Número Cep" (ionBlur)="buscaCep()">
+              <ion-icon name="navigate-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('NumeroCep').valid && form.get('NumeroCep').touched">
+            <ion-text *ngIf="form.get('NumeroCep').hasError('required')">
+              * Preencha o Número do Cep
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <ion-item>
+          <ion-label position="stacked">Cidade:</ion-label>
+          <ion-select formControlName="CidadeId" multiple="false" cancelText="Cancelar" [compareWith]="compareWithCidade">
+            <ion-select-option *ngFor="let cid of cidades" [value]="cid">
+              {{ cid.NomeCidade }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Numero Endereço</ion-label>
+            <ion-input formControlName="NumeroEndereco" type="text" placeholder="Número Endereço">
+              <ion-icon name="navigate-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('NumeroEndereco').valid && form.get('NumeroEndereco').touched">
+            <ion-text *ngIf="form.get('NumeroEndereco').hasError('required')">
+              * Preencha o Número do Endereço
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Endereço</ion-label>
+            <ion-input formControlName="Endereco" type="text" placeholder="Endereço">
+              <ion-icon name="navigate-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('Endereco').valid && form.get('Endereco').touched">
+            <ion-text *ngIf="form.get('Endereco').hasError('required')">
+              * Preencha o endereco
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Bairro</ion-label>
+            <ion-input formControlName="BairroEndereco" type="text" placeholder="Bairro">
+              <ion-icon name="navigate-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('BairroEndereco').valid && form.get('BairroEndereco').touched">
+            <ion-text *ngIf="form.get('BairroEndereco').hasError('required')">
+              * Preencha o bairro
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Complemento</ion-label>
+            <ion-input formControlName="Complemento" type="text" placeholder="Complemento">
+              <ion-icon name="navigate-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('Complemento').valid && form.get('Complemento').touched">
+            <ion-text *ngIf="form.get('Complemento').hasError('required')">
+              * Preencha o complemento
+            </ion-text>
+          </ion-text>
+        </div>
+
+      </form>
+      </ion-item-group>
+
+    </ion-list>
+
+</ion-content>
+
+<ion-footer>
+  <ion-button
+    size="large"
+    expand="block"
+    shape="round"
+    color="primary"
+    (click)="onSubmit()">
+    <ion-text color="white">Salvar</ion-text>
+  </ion-button>
+</ion-footer>
+

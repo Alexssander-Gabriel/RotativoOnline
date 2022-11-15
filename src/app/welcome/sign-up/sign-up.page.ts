@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, isDevMode, OnInit } from '@angular/core';
+import { FormControl, FormGroup, NgControlStatusGroup, Validators } from '@angular/forms';
 import { Cidade, Cidades } from 'src/app/model/cidade.model';
-import { CidadeService } from 'src/app/api/cidade/cidade.service';
+import { CidadeService } from 'src/app/services/cidade/cidade.service';
 import { finalize, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { LoginService } from 'src/app/api/login/login.service';
+import { LoginService } from 'src/app/services/login/login.service';
 import { MensagemService } from 'src/app/services/mensagem/mensagem.service';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/login.model';
 import { Login } from 'src/app/model/login.model';
+import { Cadastro } from 'src/app/model/cadastro.model';
+import { CadastroService } from 'src/app/services/cadastro/cadastro.service';
+import { UtilsService } from 'src/app/services/utils/utils.service';
+import { noUndefined } from '@angular/compiler/src/util';
+import { configFromSession } from '@ionic/core';
 
 @Component({
   selector: 'app-sign-up',
@@ -20,20 +25,29 @@ export class SignUpPage implements OnInit {
   form: FormGroup;
   cidade : Cidade;
   cidades : Cidades[];
-  login: Login;
+  login: Login[];
   loading : boolean = false;
+  cadastros : Cadastro[];
+  users : User[];
+  cadastroAtual : Cadastro;
+  isToggleBtnChecked: boolean;
 
   constructor(
            private cidadeService : CidadeService,
            private loginService :LoginService,
+           private cadastroService: CadastroService,
            private mensagemService : MensagemService,
+           private UtilsService: UtilsService,
            private router : Router,
            public httpCliente : HttpClient
-   ) { 
+   ) {
     this.initForm();
   }
 
   ngOnInit() {
+    this.listCadastros();
+    this.listCidades();
+    this.listLogins();
   }
 
   initForm() {
@@ -44,25 +58,28 @@ export class SignUpPage implements OnInit {
       nome: new FormControl(null, {validators: [Validators.required]}),
       numeroTelefone: new FormControl(null, {validators: [Validators.required]}),
       cpf: new FormControl(null, {validators: [Validators.required]}),
-      numeroCep: new FormControl(null, {validators: [Validators.required]}),    
-      cidade: new FormControl(null, {validators: [Validators.required]}),   
-      numeroEndereco: new FormControl(null, {validators: [Validators.required]}), 
-      endereco: new FormControl(null, {validators: [Validators.required]}), 
-      bairro: new FormControl(null, {validators: [Validators.required]}), 
-      complemento: new FormControl(null, {validators: [Validators.required]}) 
+      numeroCep: new FormControl(null, {validators: [Validators.required]}),
+      cidade: new FormControl(null, {validators: [Validators.required]}),
+      numeroEndereco: new FormControl(null, {validators: [Validators.required]}),
+      endereco: new FormControl(null, {validators: [Validators.required]}),
+      bairro: new FormControl(null, {validators: [Validators.required]}),
+      complemento: new FormControl(null, {validators: [Validators.required]})
     });
   }
 
   ionViewWillEnter(): void {
-    this.listCidades();
   }
 
   onSubmit() {
     if(!this.form.valid) {
       this.form.markAllAsTouched();
       return;
-    }    
-    this.salvar();
+    }
+
+    if (this.validaCadastro(this.cadastros,true) && this.validaLogin(this.login, true)){
+      this.salvar();
+    }
+
   }
 
   listCidades() {
@@ -84,6 +101,24 @@ export class SignUpPage implements OnInit {
       );
   }
 
+  listCadastros() {
+    this.loading = true;
+    this.cadastroService
+      .getCadastros()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(
+        (dados) => {
+          this.cadastros = dados;
+        },
+        async (error) => {
+        }
+      );
+  }
+
   compareWithCidade(o1: Cidades, o2: Cidades | Cidades[]) {
     if (!o1 || !o2) {
       return o1 === o2;
@@ -94,21 +129,19 @@ export class SignUpPage implements OnInit {
     }
 
     return o1.CidadeId === o2.CidadeId;
-  } 
+  }
 
   buscaCep(){
-    //console.log('Chegou aqui no cep');
     const cepValue = this.form.controls['numeroCep'].value;
     const isValid = this.form.controls['numeroCep'].valid;
     if (isValid){
-      //console.log('VALIDO');
       try {
         this.httpCliente.get(`https://viacep.com.br/ws/${cepValue}/json/`)
         .subscribe(data => {
           this.insererValoresEndereco(data);
         })
       } catch (error) {
-        
+
       }
     }
   }
@@ -119,26 +152,21 @@ export class SignUpPage implements OnInit {
 
     if (dados.uf !== undefined && dados.uf.trim() != '') {
       var cidadeCep = this.cidades.find((item)=>{
-        return item.Estado.toLowerCase().trim() == dados.uf.toLowerCase().trim() 
+        return item.Estado.toLowerCase().trim() == dados.uf.toLowerCase().trim()
             && item.NomeCidade.toLowerCase().trim() == dados.localidade.toLowerCase().trim();
       });
       if (cidadeCep){
         this.form.controls['cidade'].setValue(cidadeCep);
       }
     }
-    //console.log(this.form.controls['cidade'].value);
   }
 
 
   salvar() {
     this.loading = true;
     const { name, password } = this.form.value;
-  
-    //this.loading = true;
-  
     this.loginService
       .save(this.form.value)
-      //.save(dados)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -147,7 +175,6 @@ export class SignUpPage implements OnInit {
       .subscribe(
         (dados) => {
           this.mensagemService.success(`Usuário ${name} cadastrado com sucesso!`);
-          //this.logarUsuario();
           this.router.navigate(['/welcome/sign-in']);
         },
         (dados) => {
@@ -167,8 +194,8 @@ export class SignUpPage implements OnInit {
         })
       )
       .subscribe(
-        (logins) => {
-          this.login = logins;
+        (dadosLogin) => {
+          this.login = dadosLogin;
         },
         async (error) => {}
       );
@@ -179,7 +206,7 @@ export class SignUpPage implements OnInit {
     this.listLogins();
     const { name, password } = this.form.value;
 
-    var existsUser = this.login.dados.find((item) => {
+    var existsUser = this.login.find((item) => {
       return item.NomeUsuario.toLowerCase() === name.toLowerCase().trim() && item.Senha == password.trim();
     });
 
@@ -197,4 +224,62 @@ export class SignUpPage implements OnInit {
       this.router.navigate(['/home']);
     }
   }
+
+  convertFormToLogin() : Cadastro{
+     this.cadastroAtual.Cpf = this.form.controls['cpf'].value;
+
+     return this.cadastroAtual;
+  }
+
+
+  validaCadastro(cadastros : Cadastro[], mostraMensagem : boolean = false) : boolean{
+
+    if ((cadastros !== undefined && cadastros.length > 0)  && (this.form.controls['cpf'].value !== undefined)){
+
+      var existsCadastroCpf = cadastros.find((item)=> item.Cpf.trim() == this.form.controls['cpf'].value)
+
+      if (existsCadastroCpf !== undefined && existsCadastroCpf){
+        if (mostraMensagem){
+          this.mensagemService.error("Já existe um cadastro com o mesmo cpf informado.",()=>{});
+        }
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  validaLogin(logins : Login[], mostraMensagem : boolean = true){
+    if ((logins !== undefined && logins.length > 0) && (this.form.controls['email'].value !== undefined)){
+
+      var existsLoginEmail = logins.find((item)=> item.Email.trim() == this.form.controls['email'].value);
+
+      if (existsLoginEmail !== undefined && existsLoginEmail){
+        if (mostraMensagem){
+          this.mensagemService.error("Já eixste um cadastro com mesmo email",()=>{});
+        }
+        return false;
+      }
+    }
+
+    if ((logins !== undefined && logins.length > 0) && (this.form.controls['name'].value !== undefined)){
+
+      var existsLoginEmail = logins.find((item)=> item.NomeUsuario.trim() == this.form.controls['name'].value);
+
+      if (existsLoginEmail !== undefined && existsLoginEmail){
+        if (mostraMensagem){
+          this.mensagemService.error("Já existem um cadastro com mesmo nome de usuário",()=>{});
+        }
+        return false;
+      }
+    }
+
+    return true
+  }
+
+  onToggleBtnChange(event): void {
+    const isChecked = this.isToggleBtnChecked;
+    this.isToggleBtnChecked = isChecked;
+  }
+
 }

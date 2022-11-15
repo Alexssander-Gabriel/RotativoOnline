@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Login, User } from 'src/app/model/login.model';
-import { LoginService } from 'src/app/api/login/login.service';
+import { LoginService } from 'src/app/services/login/login.service';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MensagemService } from 'src/app/services/mensagem/mensagem.service';
+import { UtilsService } from 'src/app/services/utils/utils.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,14 +15,13 @@ import { MensagemService } from 'src/app/services/mensagem/mensagem.service';
 export class SignInPage implements OnInit {
 
   form: FormGroup;
-  login: Login;
+  login: Login[];
   loading : boolean = false;
 
-  constructor(
-    private loginService: LoginService,
-    private router: Router,
-    private mensagemService : MensagemService
-  ) {
+  constructor(private loginService: LoginService,
+              private router: Router,
+              private mensagemService : MensagemService,
+              private utilsService: UtilsService) {
     this.initForm();
     this.login = null;
   }
@@ -42,33 +42,29 @@ export class SignInPage implements OnInit {
 
   onSubmit() {
     if (!this.form.valid) {
-      console.log("formulario não é valido");
       this.form.markAllAsTouched();
       return;
     }
     var usuario = this.form.controls['login'].value;
     var senha = this.form.controls['senha'].value;
 
-    var existsUser = this.login.dados.find((item) => {
+    var existsUser = this.login.find((item) => {
       return item.NomeUsuario.toLowerCase() === usuario.toLowerCase().trim() && item.Senha == senha.trim() && item.PermissaoId == 4;
     });
 
     if (existsUser) {
-      //console.log(existsUser);
-
-      //var usuarioLogado  : User;
       const usuarioLogado = new User();
-
-      //console.log(usuarioLogado);
       usuarioLogado.CadastroId = existsUser.CadastroId;
       usuarioLogado.Email  = existsUser.Email;
       usuarioLogado.LoginId = existsUser.LoginId;
       usuarioLogado.NomeUsuario = existsUser.NomeUsuario;
       usuarioLogado.PermissaoId = existsUser.PermissaoId;
       usuarioLogado.TokenEmail = existsUser.TokenEmail;
-      this.logarUsuario(usuarioLogado);
-      this.mensagemService.success("Logado com sucesso!");
-      this.router.navigate(['/home']);
+
+      this.utilsService.logarUsuario(usuarioLogado,'/estacionamento-lista',true);
+      //this.logarUsuario(usuarioLogado);
+      //this.mensagemService.success("Logado com sucesso!");
+      //this.router.navigate(['/home']);
     } else {
       this.mensagemService.error('Usuário ou Senha Incorreto(s)',()=>{});
       this.form.controls['login'].setValue('');
@@ -86,25 +82,15 @@ export class SignInPage implements OnInit {
       .subscribe(
         (logins) => {
           this.login = logins;
-          //console.log(this.login);
-          //localStorage.setItem('listaProdutos',JSON.stringify(this.produtos));
         },
         async (error) => {
-          /*
-          this.produtos = JSON.parse(localStorage.getItem('listaProdutos')); 
-          if(this.produtos.length == 0){
-            await this.messageService.error('Não foi possível buscar itens do armazenamento interno.',()=>{});
-           } else {
-             await this.messageService.error('Não foi possível Carregar os itens do servidor! Carregado Itens do armazenamento Interno.',()=>{});
-           } 
-           */
         }
       );
   }
 
-  logarUsuario(usuario : User){
-    sessionStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-    console.log('Usuário logado', JSON.parse(sessionStorage.getItem('usuarioLogado')));
-  }
+  // logarUsuario(usuario : User){
+  //   sessionStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+  //   console.log('Usuário logado', JSON.parse(sessionStorage.getItem('usuarioLogado')));
+  // }
 
 }

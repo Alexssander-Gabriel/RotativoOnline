@@ -1,0 +1,65 @@
+ion-header{
+  --background-color: "primary";
+}
+
+ion-footer{
+  ion-toolbar{
+      ion-slides{
+          .container{
+              width: 100%;
+              height: 80px;
+              background: var(--ion-color-primary-tint);
+              padding: 10px;
+              margin: 0 5px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              ion-icon{
+                  font-size: 24px;
+                  color: white;
+              }
+              span{
+                  font-size: 16px;
+                  color: white;
+              }
+          }
+      }
+  }
+}
+
+// ion-img{
+//     min-width: 200px;
+//     min-height: 200px;
+//     width: 99%;
+//     height: 99%;
+// }
+
+ion-card{
+  box-shadow: 10pt;
+  //border: 1px solid orangered;
+  border: 1px solid #282e40;
+  // --max-height: 300px;s
+}
+
+ion-action-sheet.my-custom-class {
+  --background: #f58840;
+  --backdrop-opacity: 0.6;
+  --button-background-selected: #e97223;
+  --button-color: #000000;
+  --color: #fff;
+  /* role: "destructive" button iOS styling override */
+  --ion-color-danger: #000000;
+}
+
+ion-content{
+  ion-action-sheet.my-custom-class {
+      --background: #f58840;
+      --backdrop-opacity: 0.6;
+      --button-background-selected: #e97223;
+      --button-color: #000000;
+      --color: #fff;
+      /* role: "destructive" button iOS styling override */
+      --ion-color-danger: #000000;
+    }
+}
+

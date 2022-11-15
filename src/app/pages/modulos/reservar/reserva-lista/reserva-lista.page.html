@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/estacionamento-lista" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Reservas</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list *ngFor="let reserva of reservas">
+    <ion-item (click)="abrirListaAcao(reserva)">
+      <ion-avatar slot="start">
+        <img alt="Silhouette of a person's head" [src]="reserva.UrlFoto" />
+      </ion-avatar>
+      <ion-label>
+        <h4>{{reserva.NomeEstacionamento}}</h4>
+        <p>{{reserva.DiaSemana}}, {{reserva.DataEntrada | date : 'dd/MM/yyyy'}} - {{reserva.HoraEntrada}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [routerLink]="['/reserva-cadastro']">
+      <ion-icon name="add" color="white"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

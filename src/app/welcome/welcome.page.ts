@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
-import { UtilsService } from '../utils/utils.service';
+import { UtilsService } from '../services/utils/utils.service';
 
 @Component({
   selector: 'app-welcome',

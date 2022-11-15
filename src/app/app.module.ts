@@ -9,11 +9,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-import { BrMaskerModule } from 'br-mask';
-
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
-import { InformacoesReservaComponent } from './modal/informacoes-reserva/informacoes-reserva.component';
+import { InformacoesReservaComponent } from './component/informacoes-reserva/informacoes-reserva.component';
 
 //import { SomeThingComponent } from './some-thing/some-thing.component';
 //import Somethinf
@@ -25,8 +23,8 @@ import { InformacoesReservaComponent } from './modal/informacoes-reserva/informa
             IonicModule.forRoot(),
             AppRoutingModule,
             HttpClientModule,
-            BrMaskerModule,
-            Ng2SearchPipeModule],
+            Ng2SearchPipeModule
+          ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [

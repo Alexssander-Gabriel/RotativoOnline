@@ -21,3 +21,12 @@ export interface Reservar {
     DataSaida: string;
     Valor: Number;
 }
+
+export class ReservarClass implements Reservar{
+  Estacionamento: Estacionamento;
+  MetodosPagamento: MetodosPagamento;
+  FormaPagamento: FormaPagamento;
+  DataEntrada: string;
+  DataSaida: string;
+  Valor: Number;
+}

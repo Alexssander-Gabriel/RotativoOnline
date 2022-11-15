@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/estacionamento-lista" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Resumo</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Informações</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-label>
+        <h3>Estacionamento:  {{ NomeEstacionamento }} </h3>
+        <h3 *ngIf="DescricaoFormaPagamento">Forma de Pagamento:  {{ DescricaoFormaPagamento }}</h3>
+        <h3 *ngIf="DescricaoMetodoPagamento">Método de Pagamento:  {{ DescricaoMetodoPagamento }}</h3>
+        <h3>Valor: {{ Valor  | currency : 'R$ ' }}</h3>
+        <h3>Data Entrada: {{ DataEntrada }} - {{ HoraEntrada }}</h3>
+        <h3>Data Saida: {{ DataSaida }}  - {{ HoraSaida }}</h3>
+        <h3>Tempo: {{ tempoDesc }}</h3>
+        <h3>Situação: {{ STATUS }}</h3>
+      </ion-label>
+
+      <br>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="observacao">
+    <ion-card-header>
+      <ion-card-title>Observações</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-textarea [autoGrow]="true"
+      [value]="observacao">
+    </ion-textarea>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-button
+    size="large"
+    expand="block"
+    shape="round"
+    color="primary"
+    (click)="CancelarReserva()">
+    <ion-text color="white">Cancelar</ion-text>
+  </ion-button>
+</ion-footer>

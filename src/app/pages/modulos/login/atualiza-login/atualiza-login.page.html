@@ -1,0 +1,112 @@
+<ion-header color="primary">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" defaultHref="/perfilusuario" color="white"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <p><ion-text color="white">Login</ion-text></p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full">
+
+    <ion-item-group class="ion-margin-horizontal">
+      <form [formGroup]="form">
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Nome</ion-label>
+            <ion-input formControlName="NomeUsuario" type="text" placeholder="Nome">
+              <ion-icon name="person-circle" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('NomeUsuario').valid && form.get('NomeUsuario').touched">
+            <ion-text *ngIf="form.get('NomeUsuario').hasError('required')">
+              * Preencha seu nome
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical">
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input formControlName="Email" type="email" placeholder="Email">
+              <ion-icon name="mail" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger"
+            *ngIf="!form.get('Email').valid && form.get('Email').touched">
+            <ion-text *ngIf="form.get('Email').hasError('required')">
+              * Preencha seu Email
+            </ion-text>
+            <ion-text
+              *ngIf="!form.get('Email').hasError('required') && form.get('Email').hasError('email')">
+              * Insira um endereço de email correto.
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical" *ngIf="isToggleBtnChecked">
+          <ion-item>
+            <ion-label position="stacked">Senha</ion-label>
+            <ion-input formControlName="SenhaNova" type="password" placeholder="Senha">
+              <ion-icon name="key" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('SenhaNova').valid && form.get('SenhaNova').touched">
+            <ion-text *ngIf="form.get('SenhaNova').hasError('required')">
+              * Preencha sua nova senha
+            </ion-text>
+            <ion-text *ngIf="!form.get('SenhaNova').hasError('required') && form.get('SenhaNova').hasError('minlength')">
+              * Deve conter no mínimo 8 caracteres
+            </ion-text>
+          </ion-text>
+        </div>
+
+        <div class="ion-margin-vertical" *ngIf="isToggleBtnChecked">
+          <ion-item>
+            <ion-label position="stacked">Confirmar Senha</ion-label>
+            <ion-input formControlName="SenhaVerifica" type="password" placeholder="Senha">
+              <ion-icon name="key" slot="start" color="medium"></ion-icon>
+            </ion-input>
+          </ion-item>
+          <ion-text class="error" color="danger" *ngIf="!form.get('SenhaVerifica').valid && form.get('SenhaVerifica').touched">
+            <ion-text *ngIf="form.get('SenhaVerifica').hasError('required')">
+              * Preencha a confirmação da nova senha
+            </ion-text>
+            <ion-text *ngIf="!form.get('SenhaVerifica').hasError('required') && form.get('SenhaVerifica').hasError('minlength')">
+              * Deve conter no mínimo 8 caracteres
+            </ion-text>
+          </ion-text>
+        </div>
+
+      </form>
+      </ion-item-group>
+
+      <ion-item>
+        <ion-label>Alterar Senha</ion-label>
+        <ion-toggle
+        color="primary"
+        [(ngModel)]="isToggleBtnChecked"
+        [checked]="isToggleBtnChecked"
+        (ionChange)="onToggleBtnChange($event)"
+        >
+        </ion-toggle>
+      </ion-item>
+
+    </ion-list>
+</ion-content>
+
+
+<ion-footer>
+  <ion-button
+    size="large"
+    expand="block"
+    shape="round"
+    color="primary"
+    (click)="onSubmit()">
+    <ion-text color="white">Salvar</ion-text>
+  </ion-button>
+</ion-footer>

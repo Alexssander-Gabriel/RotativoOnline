@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-progress-bar *ngIf="loading" type="indeterminate" color="secondary"></ion-progress-bar>
+
+    <ion-button class="menu" fill="clear" slots="icon-only" color="secondary">
+      <ion-menu-button menu="main-menu" color="white"></ion-menu-button>
+      <ion-button (click)="filtroPreciso()" class="menu" fill="clear" slots="icon-only" color="secondary" slot="end" style="font-size: 10px;">
+        <ion-icon *ngIf="filtroPrecisoAtivo" style="font-size: 30px;" color="white" name="filter-circle-outline"></ion-icon>
+        <ion-icon *ngIf="!filtroPrecisoAtivo" style="font-size: 30px;" color="white" name="filter-circle"></ion-icon>
+      </ion-button>
+
+    </ion-button>
+
+      <div>
+          <ion-searchbar  placeholder="Pesquisar"
+                          [(ngModel)]="consulta"
+                          showCancelButton="focus"
+                          animated
+                          color="white">
+          </ion-searchbar>
+      </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card (click)="abrirListaAcao(estacionamento)"  class="ion-padding-horizontal"
+    *ngFor= "let estacionamento of estacionamentos | filter:consulta">
+
+    <ion-card-header>
+      <ion-card-title>{{estacionamento.NomeEstacionamento}}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-img [src]="estacionamento.UrlFoto"></ion-img>
+
+      <ion-label>
+        <p>{{estacionamento.Endereco}},{{estacionamento.NumeroEndereco}} - {{estacionamento.BairroEndereco}}</p>
+        <p>{{estacionamento.NomeCidade}} - {{estacionamento.Estado}}, {{estacionamento.NumeroCep}}</p>
+      </ion-label>
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>
+
+<ion-footer class="ion-no-border">
+
+   <ion-toolbar color="primary">
+    <ion-slides [options]="slideOptions">
+      <ion-slide *ngFor="let option of options">
+        <div class="container ion-text-left" (click)="abrirTela(option.rota)">
+          <ion-icon [name]="option.icon"></ion-icon>
+           <span>{{option.text}}</span>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </ion-toolbar>
+
+</ion-footer>
