@@ -19,6 +19,7 @@ import { DiasatendimentoService } from 'src/app/services/diasatendimento/diasate
 import { DiasAtendimento } from 'src/app/model/diasatendimento.model';
 import { ThrowStmt } from '@angular/compiler';
 import { ElementArrayFinder } from 'protractor';
+import { disableDebugTools } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-reserva-cadastro',
@@ -124,6 +125,12 @@ export class ReservaCadastroPage implements OnInit {
       return;
     }
 
+    var formapagamentoAtual = (this.form.controls['FormaPagamento'].value) as FormaPagamento
+    if (formapagamentoAtual != undefined && formapagamentoAtual.FormaPagamentoId == 5 && this.isToggleBtnChecked && !this.mostraMetodosPagamento){
+      this.mensagemService.error("Usuário não contém métodos de pagamento cadastrados para utilizar a forma de pagamento 'Online'",()=>{});
+      return;
+    }
+
     this.getCalculoValores();
   }
 
@@ -224,7 +231,12 @@ export class ReservaCadastroPage implements OnInit {
     )
     .subscribe(
       (dados) => {
+        // @ts-ignore
+        if (dados.dados == 'Não existem dados para retornar'){
+          this.metodosPagamento = undefined;
+        } else {
           this.metodosPagamento = dados;
+        }
       },
       async (error) => {
         console.log(error.error);
@@ -312,10 +324,11 @@ export class ReservaCadastroPage implements OnInit {
           } else if (this.liberaPagamento.trim() == 'N' && this.isToggleBtnChecked){
             if (this.precoLivre <= 0.00){
               this.mensagemService.error("Estacionamento não permite realizar pagamento antecipado.",()=>{});
+              prosseguirReserva = false;
             } else {
               this.mensagemService.error("Pagamento antecipado somente pode ser efetuado quando valor a ser pago atinge o valor livre.",()=>{});
+              prosseguirReserva = false;
             }
-            return;
           }
 
           if (prosseguirReserva){
@@ -525,7 +538,7 @@ export class ReservaCadastroPage implements OnInit {
     this.mostraFormasPagamento = this.isToggleBtnChecked;
 
     if (this.mostraMetodosPagamento){
-      this.mostraMetodosPagamento = this.metodosPagamento.length > 0;
+      this.mostraMetodosPagamento = this.metodosPagamento != undefined
     }
 
     if (this.mostraFormasPagamento){
@@ -584,7 +597,9 @@ export class ReservaCadastroPage implements OnInit {
       this.mostraMetodosPagamento = false;
       this.form.controls['MetodosPagamento'].setValue(null);
     } else {
-      this.mostraMetodosPagamento = true;
+      if (this.metodosPagamento !== undefined){
+        this.mostraMetodosPagamento = true;
+      }
     }
 
     console.log("Alterou forma de pagagamento");
