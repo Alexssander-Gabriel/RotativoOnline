@@ -68,14 +68,10 @@ export class EstacionamentoPerfilPage implements OnInit {
   }
 
   onSubmit(){
-    this.user = this.utilsService.getUsuario('/sign-in',true,"");
+    this.user = this.utilsService.getUsuario('/sign-in',true,"Você precisa estar logado para realizar uma reserva.");
     if (this.user !== undefined && this.user){
       this.router.navigate(['/reserva-cadastro',this.EstacionamentoId]);
     }
-  }
-
-  abrirTela(rota: string){
-    this.router.navigate([rota]);
   }
 
   findById(id){
@@ -110,20 +106,24 @@ export class EstacionamentoPerfilPage implements OnInit {
             this.UrlFoto = estacionamentoApi.UrlFoto;
             this.LinkMaps = estacionamentoApi.LinkMaps;
 
-            if(this.UrlFoto != undefined && this.UrlFoto.length > 0){
-              this.UrlFoto = this.UrlFoto.replace(".PNG",".png");
-              this.UrlFoto = this.UrlFoto.replace(".JPG",".jpg");
-              this.UrlFoto = this.UrlFoto.replace(".JPEG",".jpeg");
+            // if(this.UrlFoto != undefined && this.UrlFoto.length > 0){
+            //   this.UrlFoto = this.UrlFoto.replace(".PNG",".png");
+            //   this.UrlFoto = this.UrlFoto.replace(".JPG",".jpg");
+            //   this.UrlFoto = this.UrlFoto.replace(".JPEG",".jpeg");
 
-              if (this.UrlFoto.indexOf(',') != -1){
-                var foto = this.UrlFoto.substring(0,this.UrlFoto.indexOf(','));
-                this.UrlFoto = "/assets/imgs" + foto;
-              } else {
-                this.UrlFoto = "/assets/imgs" + this.UrlFoto;
-              }
-            } else {
-              this.UrlFoto = "/assets/imgs/estacionamentos/semimagem.png";
-            }
+            //   if (this.UrlFoto.indexOf(',') != -1){
+            //     var foto = this.UrlFoto.substring(0,this.UrlFoto.indexOf(','));
+            //     this.UrlFoto = "/assets/imgs" + foto;
+            //   } else {
+            //     this.UrlFoto = "/assets/imgs" + this.UrlFoto;
+            //   }
+            // } else {
+            //   this.UrlFoto = "/assets/imgs/estacionamentos/semimagem.png";
+            // }
+
+            this.UrlFoto = this.utilsService.formataUrlFoto(this.UrlFoto);
+
+            //console.log("caminho: ", this.UrlFoto);
           }
 
         },

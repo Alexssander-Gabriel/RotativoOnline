@@ -5,8 +5,8 @@
     <ion-button class="menu" fill="clear" slots="icon-only" color="secondary">
       <ion-menu-button menu="main-menu" color="white"></ion-menu-button>
       <ion-button (click)="filtroPreciso()" class="menu" fill="clear" slots="icon-only" color="secondary" slot="end" style="font-size: 10px;">
-        <ion-icon *ngIf="filtroPrecisoAtivo" style="font-size: 30px;" color="white" name="filter-circle-outline"></ion-icon>
-        <ion-icon *ngIf="!filtroPrecisoAtivo" style="font-size: 30px;" color="white" name="filter-circle"></ion-icon>
+        <ion-icon *ngIf="!filtroPrecisoAtivo" style="font-size: 30px;" color="white" name="filter-circle-outline"></ion-icon>
+        <ion-icon *ngIf="filtroPrecisoAtivo" style="font-size: 30px;" color="white" name="filter-circle"></ion-icon>
       </ion-button>
 
     </ion-button>

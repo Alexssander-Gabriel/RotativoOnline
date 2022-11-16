@@ -19,5 +19,5 @@
       LinkMaps : string;
       ChavePix : string;
       TipoChavePix : string;
-      VagasReserva : string;
+      VagasLocacao : string;
   }

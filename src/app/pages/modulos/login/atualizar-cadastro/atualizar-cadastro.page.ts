@@ -48,17 +48,20 @@ export class AtualizarCadastroPage implements OnInit {
       NumeroCep: ['',[Validators.required, Validators.min(1)]],
       TipoCadastro: ['']
     });
+  }
 
+  initForm(){
+
+  }
+
+  ionViewWillEnter(): void {
     this.listCidades();
+
     const id = +this.activatedRoute.snapshot.params.id;
 
     if (id) {
       this.findById(id);
     }
-  }
-
-  ionViewWillEnter(): void {
-    this.listCidades();
   }
 
   findById(id){
@@ -73,13 +76,10 @@ export class AtualizarCadastroPage implements OnInit {
       .subscribe(
         (cadastro) => {
           if (cadastro) {
-            console.log("chegou aqui no find by id");
             this.form.patchValue({
               ...cadastro,
             });
-
             this.getCidade(cadastro.CidadeId);
-
           }
         },
         () =>
@@ -125,8 +125,6 @@ export class AtualizarCadastroPage implements OnInit {
 
           //@ts-ignore
           const cidadesNew = this.cidadeAtual.dados;
-
-
 
           console.log(this.form.controls['CidadeId']);
           // //this.form.contains["CidadeId"].selectedText = this.cidadeAtual.NomeCidade;
@@ -177,11 +175,9 @@ export class AtualizarCadastroPage implements OnInit {
   }
 
   buscaCep(){
-    //console.log('Chegou aqui no cep');
-    const cepValue = this.form.controls['numeroCep'].value;
-    const isValid = this.form.controls['numeroCep'].valid;
+    const cepValue = this.form.controls['NumeroCep'].value;
+    const isValid = this.form.controls['NumeroCep'].valid;
     if (isValid){
-      //console.log('VALIDO');
       try {
         this.httpCliente.get(`https://viacep.com.br/ws/${cepValue}/json/`)
         .subscribe(data => {
@@ -203,10 +199,9 @@ export class AtualizarCadastroPage implements OnInit {
             && item.NomeCidade.toLowerCase().trim() == dados.localidade.toLowerCase().trim();
       });
       if (cidadeCep){
-        this.form.controls['cidade'].setValue(cidadeCep);
+        this.form.controls['CidadeId'].setValue(cidadeCep);
       }
     }
-    //console.log(this.form.controls['cidade'].value);
   }
 
   onSubmit(){

@@ -54,7 +54,7 @@ export class ReservaCadastroPage implements OnInit {
   MetodoPagamento : MetodosPagamento;
   TipoChavePix : string;
   ChavePix: string;
-  VagasReserva : string;
+  VagasLocacao : string;
   PagamentoViaPix: boolean = false;
   estacionamentosDisponiveis : Estacionamento[];
 
@@ -100,7 +100,7 @@ export class ReservaCadastroPage implements OnInit {
     this.listMetodosPagamento(this.Cadastro.CadastroId);
     this.listFormasPagamento();
     this.filtroPreciso();
-    //this.listDiasAtendimento();
+
   }
 
   onSubmit(){
@@ -111,36 +111,20 @@ export class ReservaCadastroPage implements OnInit {
 
     this.estacionamento = this.form.controls['Estacionamento'].value;
 
-    if (this.estacionamento.EstacionamentoId !== 3) {
-      this.mensagemService.error("Estacionamento não atende nesse dia",()=>{});
-      return
-    }
-
     this.listDiasAtendimento(this.estacionamento.EstacionamentoId);
 
     if (!this.validaData(true)){
       return;
     }
 
-    if (this.estacionamentosDisponiveis == undefined || this.estacionamentosDisponiveis.length <= 0){
-      this.mensagemService.error("Estacionamento não esta disponível nesse momento para a reserva",()=>{});
-      return
-    }
-
     var entrada = this.form.controls['DataEntrada'].value;
     var saida = this.form.controls['DataSaida'].value;
-
-    console.log(entrada);
-    console.log(saida);
 
     if (!this.utilsService.validaDiasAtendimento(this.DiasAtendimento,true,entrada,saida)){
       return;
     }
 
-
-
     this.getCalculoValores();
-    //this.openModal();
   }
 
   findById(id, somenteRecuperarObjeto : boolean = false){
@@ -155,16 +139,15 @@ export class ReservaCadastroPage implements OnInit {
     .subscribe(
       (dados) => {
           this.estacionamento = dados;
+
           if (!somenteRecuperarObjeto){
             this.compareWithEstacionamento(dados,this.estacionamentos);
             this.form.controls['Estacionamento'].setValue(dados);
           }
-          console.log("ao menos entrou");
-          //this.form.controls['Estacionamento'].setValue(dados);
-          //this.compareWithEstacionamento(dados,this.estacionamentos);
+
           this.precoHora = this.estacionamento.PrecoHora;
           this.precoLivre = this.estacionamento.PrecoLivre;
-          this.VagasReserva = dados.VagasReserva;
+          this.VagasLocacao = dados.VagasLocacao;
       },
       async (error) => {
         console.log("deu errado viu");
@@ -215,7 +198,7 @@ export class ReservaCadastroPage implements OnInit {
             //this.estacionamentos = null;
             //console.log("deu errado aqui");
           } else {
-            //this.mensagemService.success("Filtro preciso ativado, somente estacionamentos disponívels no momento para locação.");
+
             this.estacionamentosDisponíveis = dados;
             //console.log(dados);
             this.estacionamentos.forEach(x => {
@@ -281,14 +264,6 @@ export class ReservaCadastroPage implements OnInit {
     .subscribe(
       (dados) => {
         this.DiasAtendimento = dados;
-        var entrada = this.form.controls['DataEntrada'].value;
-        var saida = this.form.controls['DataSaida'].value;
-
-        // aqui era a validação.
-        // if (!this.utilsService.validaDiasAtendimento(dados,true,entrada,saida)) {
-        //   //this.router.navigate(['/reserva-lista']);
-        // };
-
       },
       async (error) => {
         console.log(error.error);
@@ -319,8 +294,7 @@ export class ReservaCadastroPage implements OnInit {
             this.valorPagamento = parseFloat(this.valorPagamento).toFixed(2);
           }
           this.form.controls['Valor'].setValue(this.valorPagamento);
-          //console.log("Chegou a pegar os dados filho da puta");
-          //console.log(this.calculoValores.valor);
+
           var prosseguirReserva = true;
 
           if (this.liberaPagamento.trim() == 'S' && this.isToggleBtnChecked){
@@ -335,6 +309,13 @@ export class ReservaCadastroPage implements OnInit {
                 prosseguirReserva = false;
               }
             }
+          } else if (this.liberaPagamento.trim() == 'N' && this.isToggleBtnChecked){
+            if (this.precoLivre <= 0.00){
+              this.mensagemService.error("Estacionamento não permite realizar pagamento antecipado.",()=>{});
+            } else {
+              this.mensagemService.error("Pagamento antecipado somente pode ser efetuado quando valor a ser pago atinge o valor livre.",()=>{});
+            }
+            return;
           }
 
           if (prosseguirReserva){
@@ -342,8 +323,7 @@ export class ReservaCadastroPage implements OnInit {
           }
       },
       async (error) => {
-        //console.log("deu erro aqui mesmo esse cfarlahooooopoolio")
-        //console.log(error.error);
+
       }
     );
   }
@@ -424,8 +404,6 @@ export class ReservaCadastroPage implements OnInit {
 
 
   validaData(mostraMensagem : boolean = false) : boolean {
-    //console.log("COmeçou a validar a data");
-    //return true;
 
     var hoje = new Date(Date.now());
     var dataEntrada = this.form.controls['DataEntrada'].value;
@@ -437,8 +415,6 @@ export class ReservaCadastroPage implements OnInit {
       return false;
     } else {
       dataEntrada = new Date(dataEntrada);
-      ///console.log(dataEntrada);
-      //console.log(hoje);
 
       if (dataEntrada < hoje){
         if (mostraMensagem){
@@ -475,13 +451,6 @@ export class ReservaCadastroPage implements OnInit {
       return false;
     }
 
-
-    //console.log(dataEntrada);
-    //console.log(dataSaida);
-
-    //return false;
-    //return this.utilsService.validaDiasAtendimento(this.DiasAtendimento,true);
-
     return true;
   }
 
@@ -500,9 +469,6 @@ export class ReservaCadastroPage implements OnInit {
   }
 
   async openModal() {
-    // if (!this.validaData(true)){
-    //   return;
-    // }
 
     const { MetodosPagamento, FormaPagamento } = this.form.value;
     var descricaoPagamento = "No local";
@@ -522,13 +488,6 @@ export class ReservaCadastroPage implements OnInit {
     }
 
     var pagapix = (this.form.controls['FormaPagamento'].value) as FormaPagamento;
-
-
-    // if (pagapix !== undefined && pagapix){
-    //   PagamentoPix = 'S';
-    // } else {
-    //   PagamentoPix = undefined;
-    // }
 
     const modal = await this.modalCtrl.create({
       component: InformacoesReservaComponent,
@@ -552,14 +511,10 @@ export class ReservaCadastroPage implements OnInit {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      //this.message = `Hello, ${data}!`;
-      //console.log("aperto role de confirm.");
-      //this.form.controls['PagamentoAntecipado'].setValue(this.liberaPagamento)
       this.confirmaReserva();
     }
 
     console.log(data);
-
 
   }
 
@@ -580,30 +535,16 @@ export class ReservaCadastroPage implements OnInit {
     if (!this.isToggleBtnChecked){
       this.form.controls['MetodosPagamento'].setValue(null);
       this.form.controls['FormaPagamento'].setValue(null);
+      this.form.controls['PagamentoAntecipado'].setValue('N');
+    } else {
+      this.form.controls['PagamentoAntecipado'].setValue('S');
     }
-
-    // if(!this.validaData(true)){
-    //   this.isToggleBtnChecked = false;
-    //   event.value = false;
-    //   return;
-    // }
-
-    // this.getCalculoValores();
-    // if (this.liberaPagamento !== undefined && this.liberaPagamento.trim() == 'S'){
-    //   this.mostraMetodosPagamento = isChecked;
-    // } else {
-    //   this.mensagemService.error("Estacionamento não permite a realização de pagamentos antecipados",()=>{})
-    //   this.isToggleBtnChecked = false;
-    //   this.mostraMetodosPagamento = false;
-    // }
 
   }
 
   atualizarVagasDisponiveis(){
     const id = +this.activatedRoute.snapshot.params.id;
     var idSelecionado = (this.form.controls['Estacionamento'].value as Estacionamento).EstacionamentoId;
-    //console.log(idSelecionado);
-    //var vagasdisponiveisSelecionado = (this.form.controls['Estacionamento'].value as Estacionamento).VagasReserva;
     if (idSelecionado) {
         this.findById(idSelecionado,true);
     }
@@ -647,11 +588,6 @@ export class ReservaCadastroPage implements OnInit {
     }
 
     console.log("Alterou forma de pagagamento");
-  }
-
-  alterouMetodopagamento(){
-    //var metodoPagamentoAtual = (this.form.controls['MetodosPagamento'].value) as FormaPagamento;
-    //if (metodoPagamentoAtual == undefined) return;
   }
 
   filtroPreciso(){

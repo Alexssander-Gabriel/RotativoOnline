@@ -3,26 +3,10 @@
     <ion-slide *ngFor="let slide of slideImages"
       [style.background-image]="'url(' + slide + ')'">
       <ion-grid>
-        <ion-row class="logo">
-          <!-- <ion-col>
-            <ion-img src="assets/imgs/travel.png"></ion-img>
-
-            <ion-label>
-              <h1>Rotativo</h1>
-              <h2>Online</h2>
-              <ion-icon name="car-outline" style="font-size: 50px;"></ion-icon>
-              <p class="ion-text-left logoLabel" style="text-align: center;">Seja Bem Vindo</p>
-            </ion-label>
-          </ion-col>
-          CARALHO
-          <ion-label class="ion-text-center">CARALHO</ion-label> -->
-        </ion-row>
+        <ion-row class="logo"></ion-row>
 
         <ion-label class="ion-text-center" style="color: white; font-size: 35px;">Rotativo Online</ion-label>
-        <!-- <ion-icon name="car-outline" style="font-size: 50px;"></ion-icon> -->
-        <!-- <ion-label>
-          teste aqui
-        </ion-label> -->
+
         <div class="authButton">
           <ion-button size="large" expand="block" shape="round" color="primary"
             routerLink="/welcome/sign-up">
@@ -37,6 +21,7 @@
           <ion-text color="primary">Continuar sem logar</ion-text>
         </ion-button>
         </div>
+
       </ion-grid>
     </ion-slide>
   </ion-slides>

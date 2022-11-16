@@ -141,19 +141,25 @@ export class AtualizaLoginPage implements OnInit {
     const id = +this.activatedRoute.snapshot.params.id;
     var nomeUsuario = this.form.controls['NomeUsuario'].value;
     var emailUsuario = this.form.controls['Email'].value;
+    console.log("aqui esta o id: ", id);
 
 
-
-    var existsLoginMesmoNome = this.login.find((item) => item.NomeUsuario == nomeUsuario && item.LoginId !== id);
+    var existsLoginMesmoNome = this.login.find((item) => item.NomeUsuario == nomeUsuario && item.LoginId != id);
     if (existsLoginMesmoNome){
-      this.mensagemService.error("Nome de usuário indisponível.",()=>{});
-      return false;
+      if (existsLoginMesmoNome.LoginId != id){
+        //console.log(existsLoginMesmoNome);
+        this.mensagemService.error("Nome de usuário indisponível.",()=>{});
+        return false;
+      }
     }
 
-    var existsLoginMesmoEmail = this.login.find((item) => item.Email == emailUsuario && item.LoginId !== id);
+    var existsLoginMesmoEmail = this.login.find((item) => { return item.Email.trim() == emailUsuario && item.LoginId != id});
     if (existsLoginMesmoEmail){
-      this.mensagemService.error("Email indisponível, já esta sendo utilizado por outro usuário.",()=>{});
-      return false;
+      if (existsLoginMesmoEmail.LoginId != id){
+        //console.log(existsLoginMesmoEmail.LoginId +  'meu ' + id);
+        this.mensagemService.error("Email indisponível, já esta sendo utilizado por outro usuário.",()=>{});
+        return false;
+      }
     }
 
     if (!this.isToggleBtnChecked) return true;

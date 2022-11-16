@@ -161,7 +161,6 @@ export class SignUpPage implements OnInit {
     }
   }
 
-
   salvar() {
     this.loading = true;
     const { name, password } = this.form.value;
@@ -201,37 +200,6 @@ export class SignUpPage implements OnInit {
       );
   }
 
-  logarUsuario(){
-    console.log("esta logando");
-    this.listLogins();
-    const { name, password } = this.form.value;
-
-    var existsUser = this.login.find((item) => {
-      return item.NomeUsuario.toLowerCase() === name.toLowerCase().trim() && item.Senha == password.trim();
-    });
-
-    if (existsUser) {
-      const usuarioLogado = new User();
-      usuarioLogado.CadastroId = existsUser.CadastroId;
-      usuarioLogado.Email  = existsUser.Email;
-      usuarioLogado.LoginId = existsUser.LoginId;
-      usuarioLogado.NomeUsuario = existsUser.NomeUsuario;
-      usuarioLogado.PermissaoId = existsUser.PermissaoId;
-      usuarioLogado.TokenEmail = existsUser.TokenEmail;
-
-      sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-      console.log('Usuário logado', JSON.parse(sessionStorage.getItem('usuarioLogado')));
-      this.router.navigate(['/home']);
-    }
-  }
-
-  convertFormToLogin() : Cadastro{
-     this.cadastroAtual.Cpf = this.form.controls['cpf'].value;
-
-     return this.cadastroAtual;
-  }
-
-
   validaCadastro(cadastros : Cadastro[], mostraMensagem : boolean = false) : boolean{
 
     if ((cadastros !== undefined && cadastros.length > 0)  && (this.form.controls['cpf'].value !== undefined)){
@@ -256,7 +224,7 @@ export class SignUpPage implements OnInit {
 
       if (existsLoginEmail !== undefined && existsLoginEmail){
         if (mostraMensagem){
-          this.mensagemService.error("Já eixste um cadastro com mesmo email",()=>{});
+          this.mensagemService.error("Já existe um cadastro com mesmo email",()=>{});
         }
         return false;
       }

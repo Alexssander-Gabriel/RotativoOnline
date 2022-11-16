@@ -66,7 +66,7 @@
      <ion-item *ngIf="mostraMetodosPagamento">
 
       <ion-label position="stacked">Método de Pagamento:</ion-label>
-      <ion-select (ionChange)="alterouMetodopagamento()"  formControlName="MetodosPagamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithMetodosPagamento">
+      <ion-select formControlName="MetodosPagamento" multiple="false" cancelText="Cancelar" [compareWith]="compareWithMetodosPagamento">
         <ion-select-option *ngFor="let metodo of metodosPagamento" [value]="metodo">
           {{ metodo.Descricao }}
         </ion-select-option>
@@ -114,10 +114,11 @@
 </ion-content>
 
 <ion-footer>
-  <!-- <ion-item>
-    <ion-label>Vagas disponíveis</ion-label>
-    <ion-badge color="primary"><ion-text color="white">{{ VagasReserva }}</ion-text></ion-badge>
-  </ion-item> -->
+  <ion-item>
+    <ion-label>Vagas Locação</ion-label>
+    <ion-badge color="primary"><ion-text color="white">{{ VagasLocacao }}</ion-text></ion-badge>
+  </ion-item>
+
   <ion-button
     size="large"
     expand="block"

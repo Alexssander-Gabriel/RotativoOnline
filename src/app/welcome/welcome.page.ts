@@ -17,9 +17,6 @@ export class WelcomePage implements OnInit {
 
   ngOnInit() {
     this.slideImages = [
-      //'assets/imgs/1.jpg',
-      //'assets/imgs/2.jpg',
-      //'assets/imgs/3.jpg'
       'assets/imgs/login-backgroud.jpg'
     ];
 
@@ -85,14 +82,14 @@ export class WelcomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter WelcomePage');
+    //console.log('ionViewDidEnter WelcomePage');
     this.slides.slideTo(0);
     this.slides.startAutoplay();
   }
 
   ionViewWillEnter(){
     this.utilsService.logOffUsuario();
-    console.log('Usuário logado', JSON.parse(sessionStorage.getItem('usuarioLogado')));
+    //console.log('Usuário logado', JSON.parse(sessionStorage.getItem('usuarioLogado')));
   }
 
   deslogarUsuario(){

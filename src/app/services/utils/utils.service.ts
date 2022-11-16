@@ -1,10 +1,7 @@
-import { Time } from '@angular/common';
-import { Login } from 'src/app/model/login.model';
 import { Injectable } from '@angular/core';
 import { User } from '../../model/login.model';
 import { Router } from '@angular/router';
 import { MensagemService } from '../mensagem/mensagem.service';
-import { Cadastro } from 'src/app/model/cadastro.model';
 import { DiasAtendimento } from 'src/app/model/diasatendimento.model';
 
 @Injectable({
@@ -73,7 +70,7 @@ export class UtilsService {
           urlFoto = "/assets/imgs" + urlFoto;
         }
       } else {
-        urlFoto = "/assets/imgs/estacionamentos/semimagem.png";
+         urlFoto = "/assets/imgs/estacionamentos/semimagem.png";
       }
 
       return urlFoto;
@@ -138,8 +135,6 @@ export class UtilsService {
     var dataAtual = new Date(Date.now());
     var diaSemana = dataAtual.getDay();
     diaSemana = diaSemana - 1;
-    console.log(diaSemana);
-    console.log(diasAtendimento);
     var atendeNesseDia = diasAtendimento.find((item)=>
       item.Dia == diaSemana
     );
@@ -149,22 +144,6 @@ export class UtilsService {
       return false;
     }
 
-    // console.log("Começa aqui a validar");
-    // console.log(diasAtendimento);
-
-    // console.log(entrada);
-    // console.log(saida);
-
-
-    // const currentTimeFormatted = (currentDate?: Date): string => {
-    //   const time = currentDate || new Date(),
-    //     hour = time.getHours().toString().padStart(2, '0'),
-    //     minutes = time.getMinutes().toString().padStart(2, '0'),
-    //     seconds = time.getSeconds().toString().padStart(2, '0');
-
-    //   return `${hour}:${minutes}:${seconds}`;
-    // };
-
     var atendeNesseHorario = diasAtendimento.find((item)=> {
       const [horaEntrada, minutoEntrada] = String(item.HoraEntrada).split(":")
       const [horaSaida, minutoSaida] = String(item.HoraSaida).split(":");
@@ -172,48 +151,35 @@ export class UtilsService {
       var dateEntrada = new Date(entrada);
       var dateSaida = new Date(saida);
 
-    //   console.log(dateEntrada);
-    //   console.log(dateSaida);
+      console.log(dateEntrada);
+      console.log(dateSaida);
 
+      var validaEntrada : boolean = false;
 
-    //   console.log('Entrada - Hora: ' + horaEntrada + ' minuto: ' +  minutoEntrada);
-    //   console.log('horas entrada - ' + dateEntrada.getHours());
-    //   console.log('minutos entrada - ' + dateEntrada.getMinutes());
-
-
-    //   console.log('Saida - Hora: ' + horaSaida + ' minuto: ' +  minutoSaida);
-    //   console.log('horas saida - ' + dateSaida.getHours());
-    //   console.log('minutos saida - ' + dateSaida.getMinutes());
-
-
-
-      if (Number(horaEntrada) <= entrada.hours && Number(minutoEntrada) <= entrada.minutes ) {
-        console.log("validou entrada");
-        return undefined
+      if (dateEntrada.getHours() > Number(horaEntrada)){
+        validaEntrada = true;
+      } else if (dateEntrada.getHours() == Number(horaEntrada) && dateEntrada.getMinutes() >= Number(minutoEntrada)){
+        validaEntrada = true;
       }
 
-      if (Number(horaSaida) >= saida.hours && Number(minutoSaida) >= saida.minutes ) {
-        console.log("Validou saida");
-        return undefined
+      var validaSaida : boolean = false;
+
+      if (dateSaida.getHours() < Number(horaSaida)){
+        validaSaida = true;
+      } else if (dateSaida.getHours() == Number(horaSaida) && dateSaida.getMinutes() <= Number(minutoSaida)){
+        validaSaida = true;
       }
 
-
-    //   if (dateEntrada.getHours() < Number(horaEntrada)){
-
-     //  }
-
-
-
-    //   return item
+      if (validaEntrada && validaSaida){
+        return item;
+      }
 
      })
 
-    // // var atendeNesseHorario = diasAtendimento.find((item)=> item.HoraEntrada <= entrada && item.HoraSaida >= saida)
-    // console.log(atendeNesseHorario);
-    // if (!atendeNesseHorario){
-    //   if (mostraMensagem) this.mensagemService.error("Estacionamento não atende nesse horário.", ()=>{});
-    //   return false;
-    // }
+    if (!atendeNesseHorario){
+      this.mensagemService.error("Estacionanto não atende nesse horário de reserva, verifique os dias e horários de atendimento",()=>{});
+      return false;
+    }
 
     return true;
   }

@@ -1,7 +1,7 @@
 <ion-header color="primary">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button mode="md" defaultHref="/metodospagamento" color="white"></ion-back-button>
+      <ion-back-button mode="md" defaultHref="/metodospagamento-lista" color="white"></ion-back-button>
     </ion-buttons>
     <ion-title>
       <p><ion-text color="white">Metodo de Pagamento</ion-text></p>
@@ -94,7 +94,7 @@
           </ion-item>
           <ion-text class="error" color="danger" *ngIf="!form.get('TipoCartao').valid && form.get('TipoCartao').touched">
             <ion-text *ngIf="form.get('TipoCartao').hasError('required')">
-              * Selecione um estacionamento
+              * Selecione um Tipo de Cartão
             </ion-text>
           </ion-text>
         </div>
@@ -113,7 +113,7 @@
     shape="round"
     color="primary"
     (click)="onSubmit()">
-    <ion-text color="white">Adicionar</ion-text>
+    <ion-text color="white">Salvar</ion-text>
   </ion-button>
 </ion-footer>
 

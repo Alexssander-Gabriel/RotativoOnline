@@ -20,6 +20,7 @@ export class MetodospagamentoListaPage implements OnInit {
   loading : boolean = false;
   metodosPagamentos : MetodosPagamento[];
   user : User;
+  metodosPagamentoUtilizados: MetodosPagamento[];
 
   constructor(private router: Router,
               private mensagemService: MensagemService,
@@ -37,8 +38,8 @@ export class MetodospagamentoListaPage implements OnInit {
 
     if (id) {
       this.findById(id);
+      this.listMetodosPagamentoUtilizados(id);
     }
-    //console.log("fez no will");
 
     this.user = this.utilsService.getUsuario("",false,"");
   }
@@ -58,8 +59,11 @@ export class MetodospagamentoListaPage implements OnInit {
           console.log("Ver o que retornou");
 
           console.log(metodosPagamentosApi);
+          // @ts-ignore
+          if (metodosPagamentosApi.dados == 'Não existem dados para retornar'){
+            this.metodosPagamentos = undefined;
 
-          if (metodosPagamentosApi) {
+          } else if (metodosPagamentosApi) {
             this.metodosPagamentos = metodosPagamentosApi;
             this.metodosPagamentos.forEach(x => {
               if (x.TipoCartao.trim() == 'C'){
@@ -114,9 +118,13 @@ export class MetodospagamentoListaPage implements OnInit {
   }
 
   excluir(id: number){
+    if (this.metodosPagamentoUtilizados !== undefined && this.metodosPagamentoUtilizados.length > 0 ){
+      this.mensagemService.error("Não é possível excluir um método de pagamento que já tenha sido utilizado",()=>{});
+      return;
+    }
     this.loading = true;
     this.metodospagamentoService
-      .getMetodoPagamentoUtilizado(id)
+      .delete(id)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -124,10 +132,11 @@ export class MetodospagamentoListaPage implements OnInit {
       )
       .subscribe(
         (Dados) => {
-          if (Dados.dados == 'Não é possível exluir um método de pagamento que já foi utilizado.'){
-            this.mensagemService.error(Dados.dados, ()=>{});
+          if (Dados.dados == 'Método de pagamento excluido com sucesso.'){
+            this.mensagemService.success(Dados.dados);
+            this.findById(this.user.CadastroId);
           } else {
-            this.deletar(id);
+            this.mensagemService.error("Erro ao excluir método de pagamento, certifique-se de que já não tenha sido utilizado e tente novamente.",()=>{});
           }
         },
         () =>
@@ -152,7 +161,7 @@ export class MetodospagamentoListaPage implements OnInit {
             this.mensagemService.success(Dados.dados);
             const id = +this.activatedRoute.snapshot.params.id;
             this.findById(id);
-            this.router.navigate(['/metodospagamento', this.user.CadastroId]);
+            this.router.navigate(['/metodospagamento-lista', this.user.CadastroId]);
           } else {
             this.mensagemService.error(Dados.dados,()=>{});
           }
@@ -160,6 +169,33 @@ export class MetodospagamentoListaPage implements OnInit {
         () =>
           this.mensagemService.error(
             `Método de Pagamento já está sendo utilizado`, ()=>{}
+          )
+      );
+  }
+
+  listMetodosPagamentoUtilizados(id: number){
+    this.loading = true;
+    this.metodospagamentoService
+      .getMetodoPagamentoUtilizado(id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(
+        (metodospagamentoutilizados) => {
+          // @ts-ignore
+          if (metodospagamentoutilizados.dados == 'Não existem dados para retornar'){
+
+          } else {
+            this.metodosPagamentoUtilizados = metodospagamentoutilizados;
+          }
+
+        },
+        () =>
+          this.mensagemService.error(
+            `Erro ao buscar estacionamentos`,
+            () => {}
           )
       );
   }

@@ -52,7 +52,10 @@ export class ReservaListaPage implements OnInit {
     .subscribe(
       (dados) => {
         this.reservas = dados;
-        if (this.reservas !== undefined && this.reservas){
+        // @ts-ignore
+        if (dados.dados == 'Não existem dados para retornar'){
+          this.reservas = undefined;
+        } else {
           var passou = 1;
           this.reservas.forEach(x => {
             x.UrlFoto = this.utilsService.formataUrlFoto(x.UrlFoto);
@@ -64,8 +67,6 @@ export class ReservaListaPage implements OnInit {
             //if (a.DataEntrada < b.DataSaida) return -1;
             return 0;
           })
-        } else {
-          this.reservas = null;
         }
       },
       async (error) => {

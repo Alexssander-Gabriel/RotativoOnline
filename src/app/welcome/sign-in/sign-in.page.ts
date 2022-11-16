@@ -49,7 +49,7 @@ export class SignInPage implements OnInit {
     var senha = this.form.controls['senha'].value;
 
     var existsUser = this.login.find((item) => {
-      return item.NomeUsuario.toLowerCase() === usuario.toLowerCase().trim() && item.Senha == senha.trim() && item.PermissaoId == 4;
+      return item.NomeUsuario.toLowerCase().trim() === usuario.toLowerCase().trim() && item.Senha == senha.trim() && item.PermissaoId == 4;
     });
 
     if (existsUser) {
@@ -62,9 +62,7 @@ export class SignInPage implements OnInit {
       usuarioLogado.TokenEmail = existsUser.TokenEmail;
 
       this.utilsService.logarUsuario(usuarioLogado,'/estacionamento-lista',true);
-      //this.logarUsuario(usuarioLogado);
-      //this.mensagemService.success("Logado com sucesso!");
-      //this.router.navigate(['/home']);
+
     } else {
       this.mensagemService.error('Usuário ou Senha Incorreto(s)',()=>{});
       this.form.controls['login'].setValue('');
@@ -87,10 +85,5 @@ export class SignInPage implements OnInit {
         }
       );
   }
-
-  // logarUsuario(usuario : User){
-  //   sessionStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-  //   console.log('Usuário logado', JSON.parse(sessionStorage.getItem('usuarioLogado')));
-  // }
 
 }

@@ -25,12 +25,12 @@ export class MetodospagamentoService {
     return this.httpCliente.get<MetodosPagamento>(`${environment.apiUrl}/metodospagamento/lista/${id}`);
   }
 
-  getMetodoPagamentoUtilizado(id : number): Observable<Dados> {
-    return this.httpCliente.get<Dados>(`${environment.apiUrl}/metodospagamento/utilizado/${id}`);
+  getMetodoPagamentoUtilizado(id : number): Observable<MetodosPagamento[]> {
+    return this.httpCliente.get<MetodosPagamento[]>(`${environment.apiUrl}/metodospagamento/utilizado/${id}`);
   }
 
   delete(id : number): Observable<Dados> {
-    console.log("Exluir metodo de pagamento");
+    //console.log("Exluir metodo de pagamento");
     return this.httpCliente.get<Dados>(`${environment.apiUrl}/metodospagamento/delete/${id}`);
   }
 

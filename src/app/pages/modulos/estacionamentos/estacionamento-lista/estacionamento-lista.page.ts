@@ -45,13 +45,12 @@ export class EstacionamentoListaPage implements OnInit {
 
   public slideOptions : any = { slidesPerView: 3 }
 
-  perfilEmpresa(rota : string){
+  perfilEmpresa(rota : string) {
     this.router.navigate([rota]);
   }
 
   abrirTela(rota : string){
     this.user = JSON.parse(sessionStorage.getItem('usuarioLogado'));
-    console.log("que caralho hein " + rota);
     if (rota == "/perfilusuario"){
       if (this.user == undefined || !this.user){
         this.mensagemService.error("Você precisa estar logado para acessar as opções de perfil!",()=>{});
@@ -60,13 +59,11 @@ export class EstacionamentoListaPage implements OnInit {
         this.router.navigate([rota]);
       }
     } else if (rota == "/reserva-lista" || rota == "/reserva-cadastro") {
-      console.log("Caiu no certo ao menos");
       this.user = this.utilsService.getUsuario(undefined,true,"Você precisa estar logado para visualizar o histórico de reservas.");
       if (this.user !== undefined && this.user){
         this.router.navigate([rota, this.user.CadastroId]);
       }
     } else {
-      console.log("caiu aqui caralho");
       this.router.navigate([rota]);
     }
   }
@@ -172,8 +169,6 @@ export class EstacionamentoListaPage implements OnInit {
 
     if (this.filtroPrecisoAtivo){
 
-      console.log("ativou o filtro ao menos");
-
       this.estacionamentosService
       .getFiltroPreciso()
       .pipe(
@@ -183,18 +178,17 @@ export class EstacionamentoListaPage implements OnInit {
       )
       .subscribe(
         (dados) => {
-          console.log(dados);
-          //this.estacionamentos = dados;
+          //console.log(dados);
 
           // @ts-ignore
-          if (dados == 'Não existem dados para retornar'){
+          if (dados.dados == 'Não existem dados para retornar'){
             this.mensagemService.error("Não existem estacionamentos disponíveis no momento para a locação.",()=>{});
-            this.estacionamentos = null;
+            this.estacionamentos = undefined;
             console.log("deu errado aqui");
           } else {
             this.mensagemService.success("Filtro preciso ativado, somente estacionamentos disponívels no momento para locação.");
             this.estacionamentos = dados;
-            //console.log(dados);
+
             this.estacionamentos.forEach(x => {
               x.UrlFoto = this.utilsService.formataUrlFoto(x.UrlFoto);
             });
