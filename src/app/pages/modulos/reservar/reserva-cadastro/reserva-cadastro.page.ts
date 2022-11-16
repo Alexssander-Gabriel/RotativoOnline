@@ -406,12 +406,8 @@ export class ReservaCadastroPage implements OnInit {
 
 
   calculaValores(){
-    console.log("entro calcula valores");
     if (this.validaData(false)){
       this.getCalculoValores();
-      console.log("validou a data");
-    } else {
-      console.log("data invalida");
     }
   }
 
@@ -492,12 +488,7 @@ export class ReservaCadastroPage implements OnInit {
     }
 
     if (FormaPagamento !== undefined && FormaPagamento){
-
-      console.log(FormaPagamento);
-
       PagamentoPix = FormaPagamento.FormaPagamentoId == 1 ? "Pix" : "";
-      console.log("Pegou o pagamento sim");
-      console.log(FormaPagamento);
     }
 
     var pagapix = (this.form.controls['FormaPagamento'].value) as FormaPagamento;
@@ -526,8 +517,6 @@ export class ReservaCadastroPage implements OnInit {
     if (role === 'confirm') {
       this.confirmaReserva();
     }
-
-    console.log(data);
 
   }
 
@@ -561,13 +550,11 @@ export class ReservaCadastroPage implements OnInit {
     if (idSelecionado) {
         this.findById(idSelecionado,true);
     }
-    console.log("ionchange garai");
 
     this.listDiasAtendimento(idSelecionado);
   }
 
   validaPagamentoAntecipado() : boolean {
-    console.log("validando pagamento antecipado");
 
     if (!this.isToggleBtnChecked){
       return true;
@@ -623,7 +610,7 @@ export class ReservaCadastroPage implements OnInit {
           if (dados == 'Não existem dados para retornar'){
             //this.mensagemService.error("Não existem estacionamentos disponíveis no momento para a locação.",()=>{});
             this.estacionamentosDisponiveis = null;
-            console.log("deu errado aqui");
+
           } else {
             //this.mensagemService.success("Filtro preciso ativado, somente estacionamentos disponívels no momento para locação.");
             this.estacionamentosDisponiveis = dados;
