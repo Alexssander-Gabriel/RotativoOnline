@@ -65,9 +65,11 @@ export class UtilsService {
 
         if (urlFoto.indexOf(',') != -1){
           var foto = urlFoto.substring(0, urlFoto.indexOf(','));
-          urlFoto = "/assets/imgs" + foto;
+          //urlFoto = "/assets/imgs" + foto;
+          urlFoto = "http://localhost/software_rotativos/arquivos" + urlFoto;
         } else {
-          urlFoto = "/assets/imgs" + urlFoto;
+          //urlFoto = "/assets/imgs" + urlFoto;
+          urlFoto = "http://localhost/software_rotativos/arquivos" + urlFoto;
         }
       } else {
          urlFoto = "/assets/imgs/estacionamentos/semimagem.png";
